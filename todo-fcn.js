@@ -1,16 +1,19 @@
 let todos = [];
 
+
 function renderTodo(todo){
 
     const listTodo  =document.querySelector('.todo-list');
 
+    const item = document.querySelector(`[data-key='${todo.id}']`)
+   
     const isChecked = todo.checked ? 'done' : '' ;
-
+    
     const oneItem = document.createElement('li');
-
+     
     oneItem.setAttribute('class', `todo-item ${isChecked}`);
 
-    oneItem.setAttribute('data-key', `todo-id`);
+    oneItem.setAttribute('data-key', todo.id);
 
     oneItem.innerHTML = `
 
@@ -23,9 +26,16 @@ function renderTodo(todo){
     <button class = 'delete-todo'>
     <svg> <use href='#delete-icon'></use></svg>
     </button>`
+
     
+    if (item) {
+    listTodo.replaceChild(oneItem, item);
+    } else{
     listTodo.append(oneItem);
+    }
 };
+
+
 
 function addTodo(todoText) {
     
@@ -33,7 +43,7 @@ function addTodo(todoText) {
     const todoItem = {
         todoText,
         checked : false,
-        id: Date.now()
+        id: Date.now(),
     };
 
     todos.push(todoItem);
@@ -42,7 +52,17 @@ function addTodo(todoText) {
     console.log(todos);
     
     renderTodo(todoItem);
-}
+};
+
+function toggleDone(key) {
+    
+    const index = todos.findIndex(item => item.id === Number(key));
+
+    todos[index].checked = !todos[index].checked;
+    
+    renderTodo(todos[index]);
+};
+
 
 const form = document.querySelector('.form-todo')
 
@@ -66,3 +86,11 @@ form.addEventListener('submit', event => {
     }
 });
 
+const listTodo = document.querySelector('.todo-list');
+
+listTodo.addEventListener ('click', event => {
+    if (event.target.classList.contains('tick')) {
+        const itemKey = event.target.parentElement.dataset.key;
+        toggleDone(itemKey)
+    }
+})
