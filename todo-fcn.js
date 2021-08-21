@@ -6,6 +6,11 @@ function renderTodo(todo){
     const listTodo  =document.querySelector('.todo-list');
 
     const item = document.querySelector(`[data-key='${todo.id}']`)
+
+    if (todo.deleted) {
+        item.remove();
+        return
+    }
    
     const isChecked = todo.checked ? 'done' : '' ;
     
@@ -23,7 +28,7 @@ function renderTodo(todo){
     
     <span>${todo.todoText}</span>
     
-    <button class = 'delete-todo'>
+    <button class = 'delete'>
     <svg> <use href='#delete-icon'></use></svg>
     </button>`
 
@@ -63,6 +68,18 @@ function toggleDone(key) {
     renderTodo(todos[index]);
 };
 
+function deleteTodo(key) {
+    const index = todos.findIndex(item => item.id === Number(key));
+     
+    const todoItem = {
+        deleted: true,
+        ...todos[index]
+    };
+
+    todos = todos.filter(item => item.id !== Number(key));
+    renderTodo(todoItem);
+}
+
 
 const form = document.querySelector('.form-todo')
 
@@ -91,6 +108,13 @@ const listTodo = document.querySelector('.todo-list');
 listTodo.addEventListener ('click', event => {
     if (event.target.classList.contains('tick')) {
         const itemKey = event.target.parentElement.dataset.key;
-        toggleDone(itemKey)
+        toggleDone(itemKey);
+    };
+
+    if (event.target.classList.contains('delete')){
+
+        const itemKey = event.target.parentElement.dataset.key;
+        deleteTodo(itemKey);
+
     }
 })
