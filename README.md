@@ -1,1 +1,3 @@
-# to-do-app-js
+# Simple ToDo App
+### with JS
+##### and HTML/CSS 
